@@ -3,7 +3,7 @@ package com.pharynxai.julius.server.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pharynxai.julius.dto.SignupPayload;
+import com.pharynxai.julius.server.dto.SignupDTO;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
     
     @PostMapping("/signup")
-    public String registerUser(@RequestBody SignupPayload entity) {
+    public SignupDTO registerUser(@RequestBody SignupDTO entity) {
         
         
         

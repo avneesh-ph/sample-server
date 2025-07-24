@@ -1,4 +1,4 @@
-package com.pharynxai.julius.model;
+package com.pharynxai.julius.server.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

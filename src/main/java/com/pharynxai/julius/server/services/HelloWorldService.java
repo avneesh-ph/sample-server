@@ -2,7 +2,7 @@ package com.pharynxai.julius.server.services;
 
 import org.springframework.stereotype.Service;
 
-import com.pharynxai.julius.dto.SamplePayload;
+import com.pharynxai.julius.server.dto.SamplePayload;
 
 @Service
 public class HelloWorldService {
