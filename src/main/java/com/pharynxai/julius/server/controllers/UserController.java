@@ -4,10 +4,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pharynxai.julius.server.dto.UserDTO;
 import com.pharynxai.julius.server.dto.UserDTOPayload;
-import com.pharynxai.julius.server.model.Users;
 import com.pharynxai.julius.server.services.UserService;
 
-import jakarta.websocket.server.PathParam;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,10 +45,8 @@ public class UserController {
     }
     
     @PutMapping("/{id}")
-    public UserDTOPayload putMethodName(@PathVariable UUID id, @RequestBody String entity) {
-        
-        
-        return entity;
+    public UserDTOPayload putMethodName(@PathVariable UUID id, @RequestBody UserDTO user) {
+        return userService.updateUsers(id, user);
     }
 
     @DeleteMapping("/{id}")

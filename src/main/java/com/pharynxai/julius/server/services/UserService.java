@@ -54,12 +54,12 @@ public class UserService {
         return convertToDTO(savedUsers);
     }
 
-    public Users updateUsers (Users user) {
-        Users existingUsers = userRepository.findById(user.getId()).orElseThrow();
-        existingUsers.setEmail("abc@gmail.com");
-        Users updatedUsers = userRepository.save(user);
-
-        return updatedUsers;
+    public UserDTOPayload updateUsers (UUID id, UserDTO user) {
+        Users existingUsers = userRepository.findById(id).orElseThrow();
+        existingUsers.setEmail(user.email());
+        existingUsers.setPassword(user.password());
+        Users updatedUsers = userRepository.save(existingUsers);
+        return convertToDTO(updatedUsers);
     }
 
     public void deleteUsersById(UUID id) {
