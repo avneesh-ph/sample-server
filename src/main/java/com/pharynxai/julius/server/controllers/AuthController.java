@@ -3,7 +3,10 @@ package com.pharynxai.julius.server.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pharynxai.julius.server.dto.SignupDTO;
+import com.pharynxai.julius.server.dto.UserDTO;
+import com.pharynxai.julius.server.dto.UserDTOPayload;
+import com.pharynxai.julius.server.model.Users;
+import com.pharynxai.julius.server.services.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,13 +15,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    
+    private final UserService userService;
+
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
+
     @PostMapping("/signup")
-    public SignupDTO registerUser(@RequestBody SignupDTO entity) {
-        
-        
-        
-        return entity;
+    public UserDTOPayload registerUser(@RequestBody UserDTO user) {
+        return userService.saveUsers(user);      
     }
     
+    // @PostMapping("/signin")
+    // public Users loginUser(@RequestBody UserDTO user) {
+    //     return userService.saveUsers(user);      
+    // }
+
+    // @PostMapping("/signout")
+    // public Users logoutUser(@RequestBody UserDTO user) {
+    //     return userService.saveUsers(user);      
+    // }
+
+    // @PostMapping("/oauth/google/callback")
+    // public Users googleOauth(@RequestBody UserDTO user) {
+    //     return userService.saveUsers(user);      
+    // }
 }
