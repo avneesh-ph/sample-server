@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pharynxai.julius.server.dto.UserDTO;
@@ -16,6 +17,7 @@ import com.pharynxai.julius.server.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private Users convertToEntity(UserDTO userdto) {
         Users user = new Users();
@@ -28,8 +30,9 @@ public class UserService {
         return new UserDTOPayload(user.getId(), user.getEmail());
     }
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserDTOPayload> getAllUsers() {
@@ -50,6 +53,7 @@ public class UserService {
 
     public UserDTOPayload saveUsers(UserDTO userdto) {
         Users user = convertToEntity(userdto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Users savedUsers = userRepository.save(user);
         return convertToDTO(savedUsers);
     }
