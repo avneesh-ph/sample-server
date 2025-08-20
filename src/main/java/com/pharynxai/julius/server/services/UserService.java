@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class UserService {
     private Users convertToEntity(UserDTO userdto) {
         Users user = new Users();
         user.setEmail(userdto.email());
-        user.setPassword(userdto.password());
+        user.setPassword(passwordEncoder.encode(userdto.password()));
         return user;
     }
 
@@ -47,6 +48,14 @@ public class UserService {
         Optional<Users> optionalUsers = userRepository.findById(id);
         if (optionalUsers.isPresent()) {
             return convertToDTO(optionalUsers.get());
+        }
+        return null;
+    }
+
+    public Users getUsersByEmail(String email) throws UsernameNotFoundException {
+        Optional<Users> optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isPresent()) {
+            return optionalUser.get();
         }
         return null;
     }

@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pharynxai.julius.server.dto.UserDTO;
 import com.pharynxai.julius.server.dto.UserDTOPayload;
-import com.pharynxai.julius.server.model.Users;
 import com.pharynxai.julius.server.services.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
