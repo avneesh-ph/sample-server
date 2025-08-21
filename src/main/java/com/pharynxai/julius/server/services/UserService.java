@@ -23,7 +23,7 @@ public class UserService {
     private Users convertToEntity(UserDTO userdto) {
         Users user = new Users();
         user.setEmail(userdto.email());
-        user.setPassword(passwordEncoder.encode(userdto.password()));
+        user.setPassword(userdto.password());
         return user;
     }
 
