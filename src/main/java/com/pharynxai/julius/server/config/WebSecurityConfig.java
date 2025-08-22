@@ -11,7 +11,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.pharynxai.julius.server.security.JwtAuthFilter;
 import com.pharynxai.julius.server.security.UsersDetailsService;
 
 @Configuration
@@ -19,9 +21,11 @@ import com.pharynxai.julius.server.security.UsersDetailsService;
 public class WebSecurityConfig {
 
     private final UsersDetailsService usersDetailsService;
-
-    public WebSecurityConfig(UsersDetailsService usersDetailsService) {
+    private final JwtAuthFilter jwtAuthFilter;
+    
+    public WebSecurityConfig(UsersDetailsService usersDetailsService, JwtAuthFilter jwtAuthFilter) {
         this.usersDetailsService = usersDetailsService;
+        this.jwtAuthFilter = jwtAuthFilter;
     }
     
     @Bean
@@ -34,6 +38,8 @@ public class WebSecurityConfig {
         )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT is stateless
         .httpBasic(Customizer.withDefaults()); // optional: for testing APIs with basic auth
+
+        httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return httpSecurity.build();
     }

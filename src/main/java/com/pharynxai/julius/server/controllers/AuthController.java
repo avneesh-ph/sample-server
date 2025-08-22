@@ -3,6 +3,7 @@ package com.pharynxai.julius.server.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pharynxai.julius.server.dto.JwtResponse;
 import com.pharynxai.julius.server.dto.UserDTO;
 import com.pharynxai.julius.server.dto.UserDTOPayload;
 import com.pharynxai.julius.server.model.Users;
@@ -25,14 +26,12 @@ public class AuthController {
 
     private final JwtTokenUtil jwtTokenUtil;
 
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(UserService userService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtTokenUtil jwtTokenUtil) {
+    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
@@ -42,19 +41,15 @@ public class AuthController {
     }
     
     @PostMapping("/signin")
-    public ResponseEntity<String> login(@RequestBody UserDTO request) {
-        System.err.println(request.email());
-        System.err.println(request.password());
-        Users user = userService.getUsersByEmail(request.email());
-        System.out.println("Matches? " + passwordEncoder.matches(request.password(), user.getPassword()));
-        jwtTokenUtil.generateToken("ping");
+    public ResponseEntity<?> login(@RequestBody UserDTO request) {
         try {
             Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
             );
-            System.err.println("op " + auth);
             if (auth.isAuthenticated()) {
-                return ResponseEntity.ok("Login successful");
+                String token = jwtTokenUtil.generateToken(request.email());
+                return ResponseEntity.ok(new JwtResponse(token));
+                // return ResponseEntity.ok("Login successful");
             }
         } catch (Exception e) {
             System.err.println(e);
