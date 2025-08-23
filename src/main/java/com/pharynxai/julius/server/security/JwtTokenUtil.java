@@ -1,6 +1,5 @@
 package com.pharynxai.julius.server.security;
 
-import java.security.Key;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -10,10 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtTokenUtil {
@@ -32,8 +32,28 @@ public class JwtTokenUtil {
             .subject(username)
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hr
-            .signWith(SignatureAlgorithm.HS256, jwtSigningKey())
+            .signWith(jwtSigningKey())
             .compact();
+    }
+
+    public void addJwtToCookie(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie("access-token", token);
+        cookie.setHttpOnly(true);   // prevent JS access
+        cookie.setSecure(false);     // send only over HTTPS (set false for local dev)
+        cookie.setPath("/");        // valid for all endpoints
+        cookie.setMaxAge(24 * 60 * 60); // 1 day
+        response.addCookie(cookie);
+    }
+
+    public String extractJwtFromRequest(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("access-token".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 
     public String extractEmail(String token) {
