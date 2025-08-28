@@ -33,7 +33,7 @@ public class WebSecurityConfig {
         httpSecurity
 			.csrf(csrf -> csrf.disable()) // disable CSRF for APIs
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/auth/signup", "/auth/signin").permitAll() // allow signup + login
+            .requestMatchers("/swagger-ui.html/**", "/swagger-ui/**", "/auth/signup", "/auth/signin").permitAll() // allow signup + login
             .anyRequest().authenticated()
         )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT is stateless
