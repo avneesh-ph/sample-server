@@ -3,8 +3,9 @@ package com.pharynxai.julius.server.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,11 +21,9 @@ import com.pharynxai.julius.server.security.UsersDetailsService;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    private final UsersDetailsService usersDetailsService;
     private final JwtAuthFilter jwtAuthFilter;
-    
-    public WebSecurityConfig(UsersDetailsService usersDetailsService, JwtAuthFilter jwtAuthFilter) {
-        this.usersDetailsService = usersDetailsService;
+
+    public WebSecurityConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
     
@@ -45,12 +44,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-            .userDetailsService(usersDetailsService)
-            .passwordEncoder(passwordEncoder())
-            .and().build();
-    }
+    public AuthenticationManager authenticationManager(UsersDetailsService usersDetailsService, PasswordEncoder passwordEncoder) {
+		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(usersDetailsService);
+		authenticationProvider.setPasswordEncoder(passwordEncoder);
+
+		return new ProviderManager(authenticationProvider);
+	}
 
     @Bean
 	public PasswordEncoder passwordEncoder() {

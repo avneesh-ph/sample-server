@@ -1,8 +1,9 @@
-package com.pharynxai.julius.server.controllers;
+package com.pharynxai.julius.server.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pharynxai.julius.server.dto.SigninDTO;
 import com.pharynxai.julius.server.dto.UserDTO;
 import com.pharynxai.julius.server.dto.UserDTOPayload;
 import com.pharynxai.julius.server.security.JwtTokenUtil;
@@ -41,7 +42,7 @@ public class AuthController {
     }
     
     @PostMapping("/signin")
-    public ResponseEntity<?> login(@RequestBody UserDTO request, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody SigninDTO request, HttpServletResponse response) {
         try {
             Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())

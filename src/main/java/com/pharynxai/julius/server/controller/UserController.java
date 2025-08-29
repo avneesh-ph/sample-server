@@ -1,4 +1,4 @@
-package com.pharynxai.julius.server.controllers;
+package com.pharynxai.julius.server.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
